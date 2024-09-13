@@ -6,6 +6,18 @@ export const modelProduct = sequelize.define("modelProduct", {
     name: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    description: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    ubication: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    adquisition:{
+        type: DataTypes.DATE,
+        allowNull: false
     }
 })
 

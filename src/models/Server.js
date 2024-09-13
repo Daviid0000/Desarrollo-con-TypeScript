@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import routerProduct from '../router/products.routes.js';
+import userRoutes from '../router/users.routes.js';
+import authUser from '../router/auth.user.routes.js';
 import sequelize from '../config/databaseConection.js';
 import { PORT } from '../config/environments.js';
 import './product.model.js';
@@ -10,7 +12,7 @@ class Server {
     constructor() {
         this.app  = express();
         this.port = PORT;
-
+        
         this.dbConnection();
         this.middlewares();
         this.routes();
@@ -31,7 +33,9 @@ class Server {
     }
 
     routes() {
-        this.app.use("/api",  routerProduct)
+        this.app.use("/api",  routerProduct);
+        this.app.use("/",  userRoutes);
+        this.app.use("/auth", authUser);
     }
 
     listen() {
