@@ -5,7 +5,8 @@ export const userModel = sequelize.define("userModel", {
 
     username: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     email: {
         type: DataTypes.STRING,

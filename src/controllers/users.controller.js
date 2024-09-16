@@ -130,12 +130,17 @@ export const authLogin = async (req, res) => {
         if(!username || !password) {
             return res.status(400).json({ message: "Usuario o contraseña faltante" })
         }
-        const users = await userService.findUsers();
+        const users = await userService.findUser(username);
 
-        const user = users.find(u => u.username === username && u.password === password)
-        if(!user) {
-            return res.status(400).json({ message: "Usuario o contraseña incorrecta" })
+        const authPass = bcrypt.compareSync(password, users.password);
+
+        if(!authPass) {
+            throw({
+                statusCode: 400,
+                message: "La contraseña no es valida"
+            })
         }
+
         const token = jwt.sign({ username }, secretKey, { expiresIn: '1h' });
 
         res.json({message:"Uuh te has logueado, toma tu token:", token });
