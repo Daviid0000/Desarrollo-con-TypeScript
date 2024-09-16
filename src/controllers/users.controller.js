@@ -32,12 +32,11 @@ export const createUser = async (req, res) => {
             return res.status(400).json({ message: "Email faltante" })
         }
         
-        const userExists = await userService.findEmail(email);
+        const userExists = await userService.findEmail(username);
         console.log(userExists)
-        console.log("Usuario:", userExists.email)
+        console.log("Usuario:", userExists)
 
         if(userExists) {
-            // return res.status(400).json({ message: "El usuario ya existe" })
             throw({
                 statusCode: 400,
                 message: "El usuario ya existe"
@@ -119,28 +118,22 @@ export const deleteUser = async (req, res) => {
     }
 }
 
-const users = [{
-    username: "user1",
-    password: "123456"
-}];
-
 export const authLogin = async (req, res) => {
     try {
         const { username, password } = req.body;
-
+        console.log(username, password)
         if(!username || !password) {
             return res.status(400).json({ message: "Usuario o contraseña faltante" })
         }
+        const users = await userService.findUsers();
 
         const user = users.find(u => u.username === username && u.password === password)
-
         if(!user) {
             return res.status(400).json({ message: "Usuario o contraseña incorrecta" })
         }
-
         const token = jwt.sign({ username }, secretKey, { expiresIn: '1h' });
 
-        res.json({ token });
+        res.json({message:"Uuh te has logueado, toma tu token:", token });
     } catch (error) {
         return res.status(500).json({ message: "Error en el servidor", error: error.message })
     }

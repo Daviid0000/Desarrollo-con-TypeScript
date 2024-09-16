@@ -23,9 +23,14 @@ class userService {
         return await userModel.destroy({ where: id})
     }
 
-    async findEmail(email) {
-        return await userModel.findOne({where: { email }})
+    async findEmail(username) {
+        return await userModel.findOne({where: { username }})
     }
+
+    async findUser(username) {
+        return await userModel.findOne({where: { username }})
+    }
+
 }
 
 export default new userService();

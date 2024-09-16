@@ -35,7 +35,7 @@ class Server {
     routes() {
         this.app.use("/api",  routerProduct);
         this.app.use("/",  userRoutes);
-        this.app.use("/auth", authUser);
+        this.app.use("/auth",  authUser);
     }
 
     listen() {
