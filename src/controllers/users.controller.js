@@ -1,5 +1,6 @@
 import userService from "../services/user.service.js"
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt"
 import { secretKey } from "../config/environments.js";
 
 export const viewUsers = async (req, res) => {
@@ -33,8 +34,6 @@ export const createUser = async (req, res) => {
         }
         
         const userExists = await userService.findEmail(username);
-        console.log(userExists)
-        console.log("Usuario:", userExists)
 
         if(userExists) {
             throw({
@@ -53,7 +52,13 @@ export const createUser = async (req, res) => {
         };
         
         const token = jwt.sign({ username }, secretKey, { expiresIn: '1h'});
-        return res.status(201).json({ message: "Usuario creado", userCreated, token})
+
+        const hashPass = await bcrypt.genSalt(10);
+        userCreated.password = await bcrypt.hash(password, hashPass) 
+        
+        const newUser = await userCreated.save();
+
+        return res.status(201).json({ message: "Usuario creado", newUser, token})
     } catch (error) {
         return res.status(500).json({ message: "Error en el servidor", error: error.message})
     }
