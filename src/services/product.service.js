@@ -1,4 +1,5 @@
 import { modelProduct } from "../models/product.model.js";
+import { ModelShipments } from "../models/shipment.model.js";
 
 class productService {
     constructor() { }
@@ -21,6 +22,10 @@ class productService {
 
     async deleteProduct(id) {
         return await modelProduct.destroy({ where : id})
+    }
+
+    async shipmentProduct(product) {
+        return await ModelShipments.create(product)
     }
 }
 

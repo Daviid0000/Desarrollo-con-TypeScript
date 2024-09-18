@@ -1,9 +1,9 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/databaseConection.js";
 
-export const userModel = sequelize.define("userModel", {
+export const companyModel = sequelize.define("userModel", {
 
-    username: {
+    company: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true
@@ -16,7 +16,12 @@ export const userModel = sequelize.define("userModel", {
     password: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    rol: {
+        type: DataTypes.ENUM("ADMIN", "COMPANY_EMISOR", "ORGANIZATION_RECEPTOR"),
+        defaultValue: "COMPANY_EMISOR",
+        allowNull: false
     }
 })
 
-userModel.sync();
+companyModel.sync();
