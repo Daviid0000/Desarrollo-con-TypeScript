@@ -78,7 +78,7 @@ export const getOneProduct = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
     const { id } = req.params;
-    const { company, name, description, ubication, adquisition, stock } = req.body;
+    const { company, name, description, ubication, stock } = req.body;
     try {
         const product = await productService.findByIDProduct(id);
 
@@ -108,7 +108,7 @@ export const updateProduct = async (req, res) => {
             });
         };
 
-        const productUpdated = await productService.updateProduct(id, { company, name, description, ubication, adquisition, stock });
+        const productUpdated = await productService.updateProduct(id, { company, name, description, ubication, stock });
 
         if(!productUpdated){
             throw({
@@ -125,11 +125,10 @@ export const updateProduct = async (req, res) => {
 
 export const deleteProduct = async (req, res) => {
     const { id } = req.params;
-    const { company } = req.body;
+    const { company } = req.query;
     try {
-
         const getCompany = await companyService.findCompany(company);
-        console.log(`Compania: ${company}`);
+        console.log(`Compania: ${getCompany.rol}`);
 
         if(!getCompany) {
             throw({

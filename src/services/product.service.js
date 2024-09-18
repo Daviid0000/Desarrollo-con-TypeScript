@@ -21,7 +21,7 @@ class productService {
     }
 
     async deleteProduct(id) {
-        return await modelProduct.destroy({ where : id})
+        return await modelProduct.destroy({ where : {id}})
     }
 
     async shipmentProduct(product) {
