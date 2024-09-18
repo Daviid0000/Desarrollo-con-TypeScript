@@ -139,6 +139,7 @@ export const authLogin = async (req, res) => {
         }
         const thisCompany = await companyService.findCompany(company);
         const CompanyRol = thisCompany.rol;
+        const CompanyEmail = thisCompany.email;
         console.log(`Rol de empresa: ${CompanyRol}`)
         console.log(`Contraseña de empresa: ${thisCompany.password}`)
 
@@ -151,7 +152,7 @@ export const authLogin = async (req, res) => {
             })
         }
 
-        const token = jwt.sign({ company, CompanyRol }, secretKey, { expiresIn: '1h' });
+        const token = jwt.sign({ company, CompanyRol, CompanyEmail }, secretKey, { expiresIn: '1h' });
 
         res.json({message:"Uuh te has logueado, toma tu token:", token });
     } catch (error) {

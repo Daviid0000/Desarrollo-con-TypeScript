@@ -227,5 +227,29 @@ export const distributedProduct = async (req, res) => {
             message: "Error en el servidor",
             error: error.message
         });
-    };
-}
+    }
+};
+
+export const getShipmentsByOrganization = async (req, res) => {
+    const { email } = req.params;
+
+    try {
+        const shipments = await companyService.findEmail(email);
+
+        if (!shipments || shipments.length === 0) {
+            return res.status(404).json({
+                message: "No se encontraron productos enviados a esta organización"
+            });
+        }
+
+        return res.json({
+            message: "Productos enviados encontrados",
+            shipments
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: "Error al obtener los productos enviados",
+            error: error.message
+        });
+    }
+};

@@ -27,6 +27,11 @@ class productService {
     async shipmentProduct(product) {
         return await ModelShipments.create(product)
     }
+
+    async findAllShipments(){
+        return await ModelShipments.findAll()
+    }
+
 }
 
 export default new productService();
