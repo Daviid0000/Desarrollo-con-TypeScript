@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import companyService from "../services/company.service";
+import companyService from "../services/company.service.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt"
-import { secretKey } from "../config/environments";
+import { secretKey } from "../config/environments.js";
 
 export const viewCompanys = async (_req: Request, res: Response) => {
     try {

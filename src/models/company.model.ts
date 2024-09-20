@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import sequelize from "../config/databaseConection";
+import sequelize from "../config/databaseConection.js";
 
 export const companyModel = sequelize.define("userModel", {
 

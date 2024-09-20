@@ -1,6 +1,6 @@
 import { Router } from "express"
-import { viewCompanys, viewOneCompany, updateOneCompany, createCompany, deleteOneCompany } from "../controllers/company.controller";
-import authToken from "../middlewares/auth.token";
+import { viewCompanys, viewOneCompany, updateOneCompany, createCompany, deleteOneCompany } from "../controllers/company.controller.js";
+import authToken from "../middlewares/auth.token.js";
 
 const userRoutes = Router();
 

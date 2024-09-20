@@ -1,5 +1,5 @@
-import { companyModel } from "../models/company.model"
-import { Company, objectVaried, passwordCompany } from "../types/types"
+import { companyModel } from "../models/company.model.js"
+import { Company, objectVaried, passwordCompany } from "../types/types.js"
 
 class companyService {
     constructor() { }

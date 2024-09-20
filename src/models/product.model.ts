@@ -1,4 +1,4 @@
-import sequelize from "../config/databaseConection";
+import sequelize from "../config/databaseConection.js";
 import { DataTypes, fn } from "sequelize";
 
 export const modelProduct = sequelize.define("modelProduct", {

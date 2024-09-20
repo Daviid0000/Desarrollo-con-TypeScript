@@ -1,6 +1,6 @@
-import { modelProduct } from "../models/product.model";
-import { ModelShipments } from "../models/shipment.model";
-import { objectVaried, Product } from "../types/types";
+import { modelProduct } from "../models/product.model.js";
+import { ModelShipments } from "../models/shipment.model.js";
+import { objectVaried, Product } from "../types/types.js";
 
 class productService {
     constructor() { }

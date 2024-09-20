@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { secretKey } from "../config/environments";
+import { secretKey } from "../config/environments.js";
 
 const authToken = (req: Request, res: Response, next: any) => {
     const token = req.headers['authorization'];

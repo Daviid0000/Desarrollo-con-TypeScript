@@ -1,6 +1,6 @@
-import productService from "../services/product.service"
-import companyService from "../services/company.service";
-import { productStatus, rols } from "../types/types";
+import productService from "../services/product.service.js"
+import companyService from "../services/company.service.js";
+import { productStatus, rols } from "../types/types.js";
 import { Request, Response } from "express";
 
 export const getProducts = async (_req: Request, res: Response) => {

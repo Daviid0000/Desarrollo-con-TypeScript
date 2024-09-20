@@ -1,4 +1,4 @@
-import sequelize from "../config/databaseConection";
+import sequelize from "../config/databaseConection.js";
 import { DataTypes } from "sequelize";
 
 export const ModelShipments = sequelize.define("ModelShipments", {
