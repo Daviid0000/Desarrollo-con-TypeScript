@@ -1,4 +1,4 @@
-import Server from "./src/models/Server.js";
+import Server from "./src/models/Server";
 
 const server = new Server();
 

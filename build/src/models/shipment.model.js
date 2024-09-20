@@ -1,8 +1,6 @@
-import sequelize from "../config/databaseConection.js";
+import sequelize from "../config/databaseConection";
 import { DataTypes } from "sequelize";
-
 export const ModelShipments = sequelize.define("ModelShipments", {
-
     product: {
         type: DataTypes.STRING,
         allowNull: false
@@ -27,6 +25,6 @@ export const ModelShipments = sequelize.define("ModelShipments", {
         type: DataTypes.DATE,
         allowNull: false
     }
-})
-
-ModelShipments.sync()
+});
+ModelShipments.sync();
+//# sourceMappingURL=shipment.model.js.map

@@ -1,9 +1,10 @@
-import companyService from "../services/company.service.js";
+import { Request, Response } from "express";
+import companyService from "../services/company.service";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt"
-import { secretKey } from "../config/environments.js";
+import { secretKey } from "../config/environments";
 
-export const viewCompanys = async (req, res) => {
+export const viewCompanys = async (_req: Request, res: Response) => {
     try {
         const company = await companyService.findCompanys();
 
@@ -16,12 +17,12 @@ export const viewCompanys = async (req, res) => {
         };
 
         return res.json({company});
-    } catch (error) {
+    } catch (error: any) {
         return res.status(500).json({ message: "Error en el servidor", error: error.message})
     };
 }
 
-export const createCompany = async (req, res) => {
+export const createCompany = async (req: Request, res: Response) => {
     const { company, email, password, rol } = req.body;
     console.log("datos:", company, email, password, rol)
     try {
@@ -59,15 +60,17 @@ export const createCompany = async (req, res) => {
         const newCompany = await companyCreated.save();
 
         return res.status(201).json({ message: "Empresa registrada", newCompany, token})
-    } catch (error) {
+    } catch (error: any) {
         return res.status(500).json({ message: "Error en el servidor", error: error.message})
     }
 }
 
-export const viewOneCompany = async (req, res) => {
+export const viewOneCompany = async (req: Request, res: Response) => {
     const { id } = req.params;
+    const companyId = parseInt(id);
+
     try {
-        const company = await companyService.findOneCompanyById(id)
+        const company = await companyService.findOneCompanyById(companyId)
 
         if(!company){
             throw({
@@ -77,18 +80,20 @@ export const viewOneCompany = async (req, res) => {
             })
         }
 
-        res.json(company)
-    } catch (error) {
-        res.status(500).json({ message: "Error en el servidor", error: error.message })
+        return res.json(company)
+    } catch (error: any) {
+        return res.status(500).json({ message: "Error en el servidor", error: error.message })
     }
 }
 
-export const updateOneCompany = async (req, res) => {
+export const updateOneCompany = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { company, email, password, rol } = req.body;
+    const companyId = parseInt(id);
+
     try {
-        const companyUpdated = await companyService.updateCompany(id, { company, email, password, rol });
-        const thisCompany = await companyService.findOneCompanyById(id);
+        const companyUpdated = await companyService.updateCompany(companyId, { company, email, password, rol });
+        const thisCompany = await companyService.findOneCompanyById(companyId);
 
         if(!companyUpdated){
             throw({
@@ -104,16 +109,18 @@ export const updateOneCompany = async (req, res) => {
         
         await thisCompany.save();
 
-        res.json({ message: "Empresa actualizada", thisCompany})
-    } catch (error) {
-        res.stats(500).json({ message: "Error en el servidor", error: error.message})
+        return res.json({ message: "Empresa actualizada", thisCompany})
+    } catch (error: any) {
+        return res.status(500).json({ message: "Error en el servidor", error: error.message})
     }
 }
 
-export const deleteOneCompany = async (req, res) => {
+export const deleteOneCompany = async (req: Request, res: Response) => {
     const { id } = req.params;
+    const companyId = parseInt(id);
+    
     try {
-        const companyDeleted = await companyService.deleteCompany({id});
+        const companyDeleted = await companyService.deleteCompany(companyId);
 
         if(!companyDeleted) {
             throw({
@@ -123,13 +130,13 @@ export const deleteOneCompany = async (req, res) => {
             });
         };
 
-        res.json({ message: "Empresa eliminada", companyDeleted })
-    } catch (error) {
-        res.status(500).json({ message: "Error en el servidor", error: error.message })
+        return res.json({ message: "Empresa eliminada", companyDeleted })
+    } catch (error: any) {
+        return res.status(500).json({ message: "Error en el servidor", error: error.message })
     }
 }
 
-export const authLogin = async (req, res) => {
+export const authLogin = async (req: Request, res: Response) => {
     try {
         const { company, password } = req.body;
         console.log(`Empresa: ${company}, Contraseña: ${password}`)
@@ -154,8 +161,8 @@ export const authLogin = async (req, res) => {
 
         const token = jwt.sign({ company, CompanyRol, CompanyEmail }, secretKey, { expiresIn: '1h' });
 
-        res.json({message:"Uuh te has logueado, toma tu token:", token });
-    } catch (error) {
+        return res.json({message:"Uuh te has logueado, toma tu token:", token });
+    } catch (error: any) {
         return res.status(500).json({ message: "Error en el servidor", error: error.message })
     }
 }

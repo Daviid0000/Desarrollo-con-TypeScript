@@ -1,14 +1,17 @@
-import express from 'express';
+import express, { Application } from 'express';
 import cors from 'cors';
-import routerProduct from '../router/products.routes.js';
-import userRoutes from '../router/users.routes.js';
-import authUser from '../router/auth.user.routes.js';
-import sequelize from '../config/databaseConection.js';
-import { PORT } from '../config/environments.js';
+import routerProduct from '../router/products.routes';
+import userRoutes from '../router/users.routes';
+import authUser from '../router/auth.user.routes';
+import sequelize from '../config/databaseConection';
+import { PORT } from '../config/environments';
 import './product.model.js';
 import 'dotenv/config'
 
 class Server {
+    public app: Application;
+    private port: string | number;
+
     constructor() {
         this.app  = express();
         this.port = PORT;

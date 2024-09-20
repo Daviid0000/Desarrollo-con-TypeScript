@@ -1,8 +1,6 @@
-import sequelize from "../config/databaseConection.js";
-import { DataTypes, Sequelize } from "sequelize";
-
+import sequelize from "../config/databaseConection";
+import { DataTypes, fn } from "sequelize";
 export const modelProduct = sequelize.define("modelProduct", {
-
     company: {
         type: DataTypes.STRING,
         allowNull: false
@@ -19,10 +17,10 @@ export const modelProduct = sequelize.define("modelProduct", {
         type: DataTypes.STRING,
         allowNull: false
     },
-    adquisition:{
+    adquisition: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: Sequelize.NOW,
+        defaultValue: fn("NOW"),
     },
     stock: {
         type: DataTypes.INTEGER,
@@ -32,6 +30,6 @@ export const modelProduct = sequelize.define("modelProduct", {
         type: DataTypes.INTEGER,
         defaultValue: 0
     }
-})
-
-modelProduct.sync()
+});
+modelProduct.sync();
+//# sourceMappingURL=product.model.js.map

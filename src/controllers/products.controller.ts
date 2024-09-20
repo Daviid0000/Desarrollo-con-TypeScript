@@ -1,8 +1,9 @@
-import productService from "../services/product.service.js"
-import companyService from "../services/company.service.js";
-import { productStatus, rols } from "../types/types.js";
+import productService from "../services/product.service"
+import companyService from "../services/company.service";
+import { productStatus, rols } from "../types/types";
+import { Request, Response } from "express";
 
-export const getProducts = async (req, res) => {
+export const getProducts = async (_req: Request, res: Response) => {
     try {
         const products = await productService.findAllProducts();
 
@@ -15,12 +16,12 @@ export const getProducts = async (req, res) => {
         }
 
         return res.json(products)
-    } catch (error) {
-        res.status(500).json({message: "Error en el servidor", error: error.message})
+    } catch (error:any) {
+        return res.status(500).json({message: "Error en el servidor", error: error.message})
     }
 }
 
-export const createProduct = async (req, res) => {
+export const createProduct = async (req: Request, res: Response) => {
     const { company, name, description, ubication, stock } = req.body;
     try {
         console.log(`Empresa: ${company}`);
@@ -51,16 +52,18 @@ export const createProduct = async (req, res) => {
             });
         };
 
-        res.status(201).json({message: "Producto publicado exitosamente", createdProduct});
-    } catch (error) {
-        res.status(500).json({message: "Error en el servidor", error: error.message});
+        return res.status(201).json({message: "Producto publicado exitosamente", createdProduct});
+    } catch (error: any) {
+        return res.status(500).json({message: "Error en el servidor", error: error.message});
     }
 }
 
-export const getOneProduct = async (req, res) => {
+export const getOneProduct = async (req: Request, res: Response) => {
     const { id } = req.params;
+    const productId = parseInt(id)
+
     try {
-        const product = await productService.findByIDProduct(id);
+        const product = await productService.findByIDProduct(productId);
 
         if(!product){
             throw({
@@ -71,16 +74,17 @@ export const getOneProduct = async (req, res) => {
         };
 
         res.json(product);
-    } catch (error) {
+    } catch (error: any) {
         res.status(500).json({ message: "Error en el servidor", error: error.message });
     };
 };
 
-export const updateProduct = async (req, res) => {
+export const updateProduct = async (req: Request, res: Response) => {
     const { id } = req.params;
+    const productId = parseInt(id)
     const { company, name, description, ubication, stock } = req.body;
     try {
-        const product = await productService.findByIDProduct(id);
+        const product = await productService.findByIDProduct(productId);
 
         if(!product){
             throw({
@@ -108,7 +112,7 @@ export const updateProduct = async (req, res) => {
             });
         };
 
-        const productUpdated = await productService.updateProduct(id, { company, name, description, ubication, stock });
+        const productUpdated = await productService.updateProduct(productId, { company, name, description, ubication, stock });
 
         if(!productUpdated){
             throw({
@@ -118,14 +122,20 @@ export const updateProduct = async (req, res) => {
         };
 
         res.json({ message: "Producto actualizado", product})
-    } catch (error) {
-        res.stats(500).json({ message: "Error en el servidor", error: error.message});
+    } catch (error: any) {
+        res.status(500).json({ message: "Error en el servidor", error: error.message});
     };
 };
 
-export const deleteProduct = async (req, res) => {
+export const deleteProduct = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { company } = req.query;
+    const productId = parseInt(id);
+
+    if(typeof company !== "string") {
+        return res.status(400).json({ message: "El nombre de la empresa debe ser un string"})
+    }
+
     try {
         const getCompany = await companyService.findCompany(company);
         console.log(`Compania: ${getCompany.rol}`);
@@ -145,7 +155,7 @@ export const deleteProduct = async (req, res) => {
             });
         };
 
-        const productDeleted = await productService.deleteProduct(id);
+        const productDeleted = await productService.deleteProduct(productId);
 
         if(!productDeleted) {
             throw({
@@ -155,17 +165,18 @@ export const deleteProduct = async (req, res) => {
             });
         };
 
-        const product = await productService.findByIDProduct(id);
+        const product = await productService.findByIDProduct(productId);
 
-        res.json({ message: "Producto eliminado", product });
-    } catch (error) {
-        res.status(500).json({ message: "Error en el servidor", error: error.message });
+        return res.json({ message: "Producto eliminado", product });
+    } catch (error: any) {
+        return res.status(500).json({ message: "Error en el servidor", error: error.message });
     };
 };
 
-export const distributedProduct = async (req, res) => {
+export const distributedProduct = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { distributed, company, email } = req.body;
+    const { distributed, company, organizationReceptor } = req.body;
+    const productId = parseInt(id);
 
     try {
         const getCompany = await companyService.findCompany(company);
@@ -187,7 +198,7 @@ export const distributedProduct = async (req, res) => {
             });
         };
 
-        const producto = await productService.findByIDProduct(id);
+        const producto = await productService.findByIDProduct(productId);
         if(!producto || (producto.stock <= 0)){
             throw({
                 statusCode: 404,
@@ -196,7 +207,7 @@ export const distributedProduct = async (req, res) => {
             });
         };
 
-        const organization = await companyService.findEmail(email);
+        const organization = await companyService.findCompany(organizationReceptor);
 
         const product = producto.name;
         const organizationRecep = organization.company;
@@ -222,7 +233,7 @@ export const distributedProduct = async (req, res) => {
 
         return res.json({ message: "Producto(s) distribuido(s)"});
         
-    } catch (error) {
+    } catch (error: any) {
         return res.status(500).json({
             message: "Error en el servidor",
             error: error.message
@@ -230,13 +241,13 @@ export const distributedProduct = async (req, res) => {
     }
 };
 
-export const getShipmentsByOrganization = async (req, res) => {
+export const getShipmentsByOrganization = async (req: Request, res: Response) => {
     const { email } = req.params;
 
     try {
         const shipments = await companyService.findEmail(email);
 
-        if (!shipments || shipments.length === 0) {
+        if (!shipments) {
             return res.status(404).json({
                 message: "No se encontraron productos enviados a esta organización"
             });
@@ -246,7 +257,7 @@ export const getShipmentsByOrganization = async (req, res) => {
             message: "Productos enviados encontrados",
             shipments
         });
-    } catch (error) {
+    } catch (error: any) {
         return res.status(500).json({
             message: "Error al obtener los productos enviados",
             error: error.message

@@ -1,8 +1,6 @@
 import { DataTypes } from "sequelize";
-import sequelize from "../config/databaseConection.js";
-
+import sequelize from "../config/databaseConection";
 export const companyModel = sequelize.define("userModel", {
-
     company: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -22,6 +20,6 @@ export const companyModel = sequelize.define("userModel", {
         defaultValue: "COMPANY_EMISOR",
         allowNull: false
     }
-})
-
+});
 companyModel.sync();
+//# sourceMappingURL=company.model.js.map
