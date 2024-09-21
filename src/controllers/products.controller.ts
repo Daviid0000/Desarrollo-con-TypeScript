@@ -36,7 +36,7 @@ export const createProduct = async (req: Request, res: Response) => {
         };
 
         console.log(`Rol de empresa: ${getCompany.rol}`)
-        if(getCompany.rol !== rols.COMPANY_EMISOR) {
+        if(getCompany.rol == rols.ORGANIZATION_RECEPTOR) {
             throw({
                 statusCode: 400,
                 message: "Empresa no autroizada para publicar productos"
@@ -176,7 +176,6 @@ export const deleteProduct = async (req: Request, res: Response) => {
 export const distributedProduct = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { distributed, company, organizationReceptor } = req.body;
-    console.log(`Distribucioneeeees: ${distributed}`)
     const productId = parseInt(id);
 
     try {
@@ -189,8 +188,6 @@ export const distributedProduct = async (req: Request, res: Response) => {
                 message: "Inicie sesion para publicar productos"
             });
         };
-
-        console.log(`Rol de empresaaaaaaaaa: ${getCompany.rol}`)
 
         if(getCompany.rol !== rols.COMPANY_EMISOR) {
             throw({
