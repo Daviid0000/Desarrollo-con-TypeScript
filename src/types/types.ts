@@ -39,13 +39,14 @@ export interface ShipmentProducts {
     statusProduct: string;
 }
 
-export type longitudDeEnvios = {
-    product: number;
+export interface Shipment {
+    id: number;
+    product: string;
     organizationRecep: string;
     companyDist: string;
     quantity: number;
     statusProduct: string;
     dateSend: Date;
+    dateReceived?: Date;
     length: any;
-
 }

@@ -273,3 +273,30 @@ export const getShipmentsByOrganization = async (req: Request, res: Response) =>
         });
     }
 };
+
+export const productReceived = async (req: Request, res: Response) => {
+    const { shipmentId } = req.params;
+    console.log(`id del parametro: ${shipmentId}`)
+    const id = parseInt(shipmentId);
+
+    try {
+        const shipmentProduct = await companyService.markAsReceived(id);
+
+        if (!shipmentProduct) {
+            throw({
+                statusCode: 404,
+                status: "Not Found",
+                message: "Envío no encontrado"
+            })
+        }
+
+        shipmentProduct.statusProduct = 'RECIBIDO';
+        shipmentProduct.dateReceived = new Date();
+        await shipmentProduct.save();
+
+        return res.json({ message: "Producto marcado como recibido", shipmentProduct });
+    } catch (error: any) {
+        console.error("Error al marcar como recibido:", error);
+        return res.status(500).json({ message: error.message });
+    }
+};
