@@ -10,6 +10,7 @@ routerProduct.delete("/product/:id", deleteProduct)
 
 // Distribución de producto
 routerProduct.post("/product/:id", distributedProduct)
-routerProduct.get("/product/:email", getShipmentsByOrganization)
+routerProduct.get("/products/:company", getShipmentsByOrganization)
+routerProduct.put("/productReceived", getShipmentsByOrganization)
 
 export default routerProduct

@@ -27,4 +27,25 @@ export interface Company {
     rol: string;
 }
 
+// Obteniendo unicamente la password de la interfaz Company
 export type passwordCompany = Pick<Company, 'password'>
+
+export interface ShipmentProducts {
+    id: number;
+    product: string;
+    quantity: number;
+    companyDist: string;
+    dateSend: number;
+    statusProduct: string;
+}
+
+export type longitudDeEnvios = {
+    product: number;
+    organizationRecep: string;
+    companyDist: string;
+    quantity: number;
+    statusProduct: string;
+    dateSend: Date;
+    length: any;
+
+}

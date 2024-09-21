@@ -1,5 +1,6 @@
 import { companyModel } from "../models/company.model.js"
-import { Company, objectVaried, passwordCompany } from "../types/types.js"
+import { Company, objectVaried, passwordCompany, longitudDeEnvios } from "../types/types.js"
+import { ModelShipments } from "../models/shipment.model.js"
 
 class companyService {
     constructor() { }
@@ -32,6 +33,15 @@ class companyService {
         return await companyModel.findOne({where: { company }})
     }
 
+    async findShipmentsByCompany(company: string): Promise<longitudDeEnvios | any> {
+        try {
+            const shipments = await ModelShipments.findAll({ where: { organizationRecep: company } });
+            return shipments;
+        } catch (error) {
+            console.error("Error al buscar envíos:", error);
+            throw error;
+        }
+    }
 }
 
 export default new companyService();
