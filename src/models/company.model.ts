@@ -18,8 +18,8 @@ export const companyModel = sequelize.define("userModel", {
         allowNull: false
     },
     rol: {
-        type: DataTypes.ENUM("ADMIN", "COMPANY_EMISOR", "ORGANIZATION_RECEPTOR"),
-        defaultValue: "COMPANY_EMISOR",
+        type: DataTypes.ENUM("ADMIN", "DISTRIBUIDORA", "RECEPTOR"),
+        defaultValue: "DISTRIBUIDORA",
         allowNull: false
     }
 })

@@ -1,5 +1,6 @@
 import { companyModel } from "../models/company.model.js"
-import { Company, objectVaried, passwordCompany } from "../types/types.js"
+import { Company, objectVaried, passwordCompany, Shipment } from "../types/types.js"
+import { ModelShipments } from "../models/shipment.model.js"
 
 class companyService {
     constructor() { }
@@ -32,6 +33,28 @@ class companyService {
         return await companyModel.findOne({where: { company }})
     }
 
+    async findShipmentsByCompany(company: string): Promise<Shipment | any> {
+        try {
+            const shipments = await ModelShipments.findAll({ where: { organizationRecep: company } });
+            return shipments;
+        } catch (error) {
+            console.error("Error al buscar envíos:", error);
+            throw error;
+        }
+    }
+
+    async markAsReceived(shipmentId: number): Promise<Shipment | any> {
+            return await ModelShipments.findByPk(shipmentId)
+            // if (!shipment) {
+            //     throw new Error("Envío no encontrado");
+            // }
+
+            // shipment.statusProduct = 'RECIBIDO';
+            // shipment.dateReceived = new Date(); 
+            // await shipment.save(); 
+
+            // return shipment; 
+    }
 }
 
 export default new companyService();

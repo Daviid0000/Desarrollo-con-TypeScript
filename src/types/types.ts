@@ -1,7 +1,7 @@
 export const rols = {
     ADMIN: "ADMIN",
-    COMPANY_EMISOR: "COMPANY_EMISOR",
-    ORGANIZATION_RECEPTOR: "ORGANIZATION_RECEPTOR"
+    COMPANY_EMISOR: "DISTRIBUIDORA",
+    ORGANIZATION_RECEPTOR: "RECEPTOR"
 }
 
 export const productStatus = {
@@ -27,4 +27,26 @@ export interface Company {
     rol: string;
 }
 
+// Obteniendo unicamente la password de la interfaz Company
 export type passwordCompany = Pick<Company, 'password'>
+
+export interface ShipmentProducts {
+    id: number;
+    product: string;
+    quantity: number;
+    companyDist: string;
+    dateSend: number;
+    statusProduct: string;
+}
+
+export interface Shipment {
+    id: number;
+    product: string;
+    organizationRecep: string;
+    companyDist: string;
+    quantity: number;
+    statusProduct: string;
+    dateSend: Date;
+    dateReceived?: Date;
+    length: any;
+}

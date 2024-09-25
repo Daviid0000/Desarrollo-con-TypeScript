@@ -36,7 +36,7 @@ export const createProduct = async (req: Request, res: Response) => {
         };
 
         console.log(`Rol de empresa: ${getCompany.rol}`)
-        if(getCompany.rol !== rols.COMPANY_EMISOR) {
+        if(getCompany.rol == rols.ORGANIZATION_RECEPTOR) {
             throw({
                 statusCode: 400,
                 message: "Empresa no autroizada para publicar productos"
@@ -188,11 +188,6 @@ export const distributedProduct = async (req: Request, res: Response) => {
             });
         };
 
-        console.log(`Rol de empresadsadasda: ${getCompany.rol}`)
-
-        console.log("HASTA ACÁ")
-        console.log(`ROL DE LA EMPRESAAA: ${rols.COMPANY_EMISOR}`)
-
         if(getCompany.rol !== rols.COMPANY_EMISOR) {
             throw({
                 statusCode: 400,
@@ -246,12 +241,20 @@ export const distributedProduct = async (req: Request, res: Response) => {
 };
 
 export const getShipmentsByOrganization = async (req: Request, res: Response) => {
-    const { email } = req.params;
+    const { company } = req.params;
+    console.log(`Buscando los envíos para: ${company}`)
+
+    console.log("query:", company)
+
+    if (typeof company !== 'string') {
+        return res.status(400).json({ message: "El nombre de la empresa debe ser un string." });
+    }
 
     try {
-        const shipments = await companyService.findEmail(email);
+        const shipments = await companyService.findShipmentsByCompany(company);
+        console.log(`productos enviados: ${JSON.stringify(shipments)}`)
 
-        if (!shipments) {
+        if (!shipments || shipments.length === 0) {
             return res.status(404).json({
                 message: "No se encontraron productos enviados a esta organización"
             });
@@ -259,12 +262,39 @@ export const getShipmentsByOrganization = async (req: Request, res: Response) =>
 
         return res.json({
             message: "Productos enviados encontrados",
-            shipments
+            shipments 
         });
     } catch (error: any) {
         return res.status(500).json({
             message: "Error al obtener los productos enviados",
             error: error.message
         });
+    }
+};
+
+export const productReceived = async (req: Request, res: Response) => {
+    const { shipmentId } = req.params;
+    console.log(`id del parametro: ${shipmentId}`)
+    const id = parseInt(shipmentId);
+
+    try {
+        const shipmentProduct = await companyService.markAsReceived(id);
+
+        if (!shipmentProduct) {
+            throw({
+                statusCode: 404,
+                status: "Not Found",
+                message: "Envío no encontrado"
+            })
+        }
+
+        shipmentProduct.statusProduct = 'RECIBIDO';
+        shipmentProduct.dateReceived = new Date();
+        await shipmentProduct.save();
+
+        return res.json({ message: "Producto marcado como recibido", shipmentProduct });
+    } catch (error: any) {
+        console.error("Error al marcar como recibido:", error);
+        return res.status(500).json({ message: error.message });
     }
 };
