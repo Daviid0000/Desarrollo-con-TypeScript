@@ -104,7 +104,6 @@ export const updateProduct = async (req: Request, res: Response) => {
                 message: "Compañia no autroizada para distribuir productos"
             });
         };
-
         if(getCompany.rol !== rols.COMPANY_EMISOR) {
             throw({
                 statusCode: 400,
@@ -189,7 +188,10 @@ export const distributedProduct = async (req: Request, res: Response) => {
             });
         };
 
-        console.log(`Rol de empresa: ${getCompany.rol}`)
+        console.log(`Rol de empresadsadasda: ${getCompany.rol}`)
+
+        console.log("HASTA ACÁ")
+        console.log(`ROL DE LA EMPRESAAA: ${rols.COMPANY_EMISOR}`)
 
         if(getCompany.rol !== rols.COMPANY_EMISOR) {
             throw({
@@ -197,7 +199,7 @@ export const distributedProduct = async (req: Request, res: Response) => {
                 message: "Empresa no autroizada para publicar productos"
             });
         };
-
+        console.log("hasta aqui llegué")
         const producto = await productService.findByIDProduct(productId);
         if(!producto || (producto.stock <= 0)){
             throw({
@@ -210,6 +212,8 @@ export const distributedProduct = async (req: Request, res: Response) => {
         const organization = await companyService.findCompany(organizationReceptor);
 
         const product = producto.name;
+        console.log(`cantidad antes de distribución: ${typeof producto.distributed}`)
+        console.log(`cantidad de distribuciones: ${typeof distributed}`)
         const organizationRecep = organization.company;
         const companyDist = company;
         const quantity = distributed;
@@ -225,8 +229,8 @@ export const distributedProduct = async (req: Request, res: Response) => {
         };
 
         producto.update({
-            stock: producto.stock - distributed, 
-            distributed: producto.distributed + distributed
+            stock: producto.stock - parseInt(quantity), 
+            distributed: parseInt(producto.distributed) + parseInt(quantity)
         });
 
         await productService.shipmentProduct({ product, organizationRecep, companyDist, quantity, statusProduct, dateSend })
