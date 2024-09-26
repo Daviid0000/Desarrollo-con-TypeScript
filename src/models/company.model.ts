@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/databaseConection.js";
+import { rols } from "../types/types.js";
 
 export const companyModel = sequelize.define("userModel", {
 
@@ -18,8 +19,8 @@ export const companyModel = sequelize.define("userModel", {
         allowNull: false
     },
     rol: {
-        type: DataTypes.ENUM("ADMIN", "DISTRIBUIDORA", "RECEPTOR"),
-        defaultValue: "DISTRIBUIDORA",
+        type: DataTypes.ENUM(rols.ADMIN, rols.COMPANY_EMISOR, rols.ORGANIZATION_RECEPTOR),
+        defaultValue: rols.COMPANY_EMISOR,
         allowNull: false
     }
 })
