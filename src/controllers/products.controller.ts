@@ -3,9 +3,14 @@ import companyService from "../services/company.service.js";
 import { productStatus, rols } from "../types/types.js";
 import { Request, Response } from "express";
 
-export const getProducts = async (_req: Request, res: Response) => {
+export const getProducts = async (req: Request, res: Response) => {
+    const { company } = req.params;
+    console.log("compania del params: ", company)
     try {
-        const products = await productService.findAllProducts();
+        const products = await productService.findAllProductsByCompany(company);
+        console.log("productosssss: ", products)
+        const productId = products.id
+        console.log("id de producto: ",productId)
 
         if(!products) {
             throw({
@@ -14,7 +19,6 @@ export const getProducts = async (_req: Request, res: Response) => {
                 message: "No se encontraron productos"
             })
         }
-
         return res.json(products)
     } catch (error:any) {
         return res.status(500).json({message: "Error en el servidor", error: error.message})
@@ -23,10 +27,11 @@ export const getProducts = async (_req: Request, res: Response) => {
 
 export const createProduct = async (req: Request, res: Response) => {
     const { company, name, description, ubication, stock } = req.body;
+    
     try {
-        console.log(`Empresa: ${company}`);
         const getCompany = await companyService.findCompany(company);
-
+        const companyId = getCompany.id;
+        console.log("id empresa: ", companyId)
         if(!getCompany) {
             throw({
                 statusCode: 404,

@@ -17,7 +17,17 @@ export type objectVaried = {[key: string]: string | number | Date}
 // Producto con el id tipado
 export type Product = {
     id: number;
+    company: string 
+    name: string
+    description: string
+    ubication: string
+    adquisition: Date
+    stock: number
+    distributed: number
 }
+
+// export type productId = Pick<Company, 'id'>
+
 
 // Empresa con 2 tipos de datos string
 export interface Company {
