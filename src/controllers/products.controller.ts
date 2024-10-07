@@ -3,6 +3,7 @@ import companyService from "../services/company.service.js";
 import { productStatus, rols } from "../types/types.js";
 import { Request, Response } from "express";
 
+<<<<<<< HEAD
 export const getProducts = async (req: Request, res: Response) => {
     const { company } = req.params;
     console.log("compania del params: ", company)
@@ -11,6 +12,13 @@ export const getProducts = async (req: Request, res: Response) => {
         console.log("productosssss: ", products)
         const productId = products.id
         console.log("id de producto: ",productId)
+=======
+export const getProductsByCompany = async (req: Request, res: Response) => {
+    const { company } = req.params;
+    console.log("compania:", company)
+    try {
+        const products = await productService.findAllProductsById(company);
+>>>>>>> 4288334cf16a0fb92edad8a2dfe32c7d91814b7c
 
         if(!products) {
             throw({
@@ -201,13 +209,19 @@ export const distributedProduct = async (req: Request, res: Response) => {
         };
         console.log("hasta aqui llegué")
         const producto = await productService.findByIDProduct(productId);
-        if(!producto || (producto.stock <= 0)){
+        if (producto.stock <= 0) {
             throw({
                 statusCode: 404,
                 status: "Not Found",
                 message: "No hay stock de este producto"
             });
-        };
+        }
+
+        if (distributed > producto.stock) {
+            return res.status(400).json({
+                message: `No hay suficiente stock. Solo quedan ${producto.stock} unidad(es).`
+            });
+        }
 
         const organization = await companyService.findCompany(organizationReceptor);
 
