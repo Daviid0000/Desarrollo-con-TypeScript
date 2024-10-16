@@ -3,22 +3,11 @@ import companyService from "../services/company.service.js";
 import { productStatus, rols } from "../types/types.js";
 import { Request, Response } from "express";
 
-<<<<<<< HEAD
-export const getProducts = async (req: Request, res: Response) => {
-    const { company } = req.params;
-    console.log("compania del params: ", company)
-    try {
-        const products = await productService.findAllProductsByCompany(company);
-        console.log("productosssss: ", products)
-        const productId = products.id
-        console.log("id de producto: ",productId)
-=======
 export const getProductsByCompany = async (req: Request, res: Response) => {
     const { company } = req.params;
     console.log("compania:", company)
     try {
         const products = await productService.findAllProductsById(company);
->>>>>>> 4288334cf16a0fb92edad8a2dfe32c7d91814b7c
 
         if(!products) {
             throw({

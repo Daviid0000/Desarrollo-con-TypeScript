@@ -5,18 +5,12 @@ import { objectVaried, Product } from "../types/types.js";
 class productService {
     constructor() { }
 
-<<<<<<< HEAD
-    async findAllProductsByCompany(company: string): Promise<Product | any>{
-        console.log("compania buscada: ", company)
-        return await modelProduct.findAll({ where: {company: company}})
-=======
     async findAllProductsById(company: string){
         return await modelProduct.findAll({
             where: {
                 company: company,
             }
         })
->>>>>>> 4288334cf16a0fb92edad8a2dfe32c7d91814b7c
     }
 
     async createProduct(product: objectVaried){
