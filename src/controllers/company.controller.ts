@@ -24,7 +24,6 @@ export const viewCompanys = async (_req: Request, res: Response) => {
 
 export const createCompany = async (req: Request, res: Response) => {
     const { company, email, password, rol } = req.body;
-    console.log("datos:", company, email, password, rol)
     try {
         if(!company || !password) {
             return res.status(400).json({ message: "Empresa o contraseña faltante" })
@@ -104,7 +103,6 @@ export const updateOneCompany = async (req: Request, res: Response) => {
         };
 
         const hashPass = await bcrypt.genSalt(10);
-        console.log(`Password Company: ${thisCompany.password}`)
         thisCompany.password = await bcrypt.hash(password, hashPass) 
         
         await thisCompany.save();
@@ -139,7 +137,6 @@ export const deleteOneCompany = async (req: Request, res: Response) => {
 export const authLogin = async (req: Request, res: Response) => {
     try {
         const { company, password } = req.body;
-        console.log(`Empresa: ${company}, Contraseña: ${password}`)
 
         if(!company || !password) {
             return res.status(400).json({ message: "Usuario o contraseña faltante" })
@@ -148,7 +145,6 @@ export const authLogin = async (req: Request, res: Response) => {
         const CompanyRol = thisCompany.rol;
         const CompanyEmail = thisCompany.email;
         console.log(`Rol de empresa: ${CompanyRol}`)
-        console.log(`Contraseña de empresa: ${thisCompany.password}`)
 
         const authPass = bcrypt.compareSync(password, thisCompany.password);
 

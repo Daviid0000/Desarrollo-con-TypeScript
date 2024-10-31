@@ -8,6 +8,11 @@ import { PORT } from '../config/environments.js';
 import './product.model.js';
 import 'dotenv/config'
 
+// import productService from '../services/product.service.js';
+import { ProductAuditLogger } from '../Observers/ProductAuditLogger.js';
+import { ProductNotifier } from '../Observers/productNotifier.js';
+import ProductService from '../services/product.service.js';
+
 class Server {
     public app: Application;
     private port: string | number;
@@ -15,6 +20,11 @@ class Server {
     constructor() {
         this.app  = express();
         this.port = PORT;
+
+        const productNotifier = new ProductNotifier();
+        const productAuditLogger = new ProductAuditLogger();
+        ProductService.addObserver(productNotifier);
+        ProductService.addObserver(productAuditLogger);
         
         this.dbConnection();
         this.middlewares();

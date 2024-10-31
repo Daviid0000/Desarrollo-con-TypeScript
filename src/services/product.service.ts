@@ -1,15 +1,14 @@
 import { modelProduct } from "../models/product.model.js";
 import { ModelShipments } from "../models/shipment.model.js";
-// import { IProductService } from "../interfaces/IProductService.js"; // Asegúrate de que el path sea correcto
 import { ProductInformatic } from "../Class/ProductInformatic.js";
-// import { ProductFactory } from "../factories/product.factory.js"; // Ajusta el path según sea necesario
 import { ProductFactory } from "../Class/ProductFactory.js";
-// import { IProduct } from "../interfaces/product.interface.js"; // Ajusta el path según sea necesario
 import { IProduct } from "../Interfaces/Product.interface.js";
-import { objectVaried } from "../types/types.js"; // Ajusta el path según sea necesario
+import { objectVaried } from "../types/types.js";
+import { Observer } from "../Interfaces/Observer.interface.js";
 
 class ProductService extends ProductInformatic {
     private static instance: ProductService;
+    private observers: Observer[] = []
 
 
     private constructor( company: string, name: string, description: string, ubication: string, stock: number, distributed: number = 0) {
@@ -17,14 +16,20 @@ class ProductService extends ProductInformatic {
         super(company, name, description, ubication, stock, distributed)
     }
 
+    public addObserver(observer: Observer): void {
+        this.observers.push(observer);
+    }
 
-    // Método para obtener la instancia única (Singleton)
-    // public static getInstance(): ProductService {
-    //     if (!ProductService.instance) {
-    //         ProductService.instance = new ProductService();
-    //     }
-    //     return ProductService.instance;
-    // }
+    public removeObserver(observer: Observer): void {
+        this.observers = this.observers.filter(obs => obs !== observer);
+    }
+
+    // Método para notificar a los observadores
+    private notifyObservers(eventType: string, data: any): void {
+        for (const observer of this.observers) {
+            observer.update(eventType, data);
+        }
+    }
 
     public static getInstance(): ProductService {
         if(!ProductService.instance) {
@@ -47,7 +52,7 @@ class ProductService extends ProductInformatic {
         
         const product = ProductFactory.createProduct('basic', productData);
         
-        return await modelProduct.create({
+        const newProduct = await modelProduct.create({
             company: product.company,
             name: product.name,
             description: product.description,
@@ -55,6 +60,8 @@ class ProductService extends ProductInformatic {
             stock: product.stock,
             distributed: product.distributed,
         });
+        this.notifyObservers("create", newProduct);  // Notificar observadores
+        return newProduct;
     }
 
 
@@ -64,17 +71,23 @@ class ProductService extends ProductInformatic {
 
 
     async updateProduct(id: number, productData: objectVaried) {
-        return await modelProduct.update(productData, { where: { id } });
+        const result = await modelProduct.update(productData, { where: { id } });
+        this.notifyObservers("update", { id, ...productData });  // Notificar observadores
+        return result;
     }
 
 
     async deleteProduct(id: number) {
-        return await modelProduct.destroy({ where: { id } });
+        const result = await modelProduct.destroy({ where: { id } });
+        this.notifyObservers("delete", { id });  // Notificar observadores
+        return result;
     }
 
 
     async shipmentProduct(product: objectVaried) {
-        return await ModelShipments.create(product);
+        const shipment = await ModelShipments.create(product);
+        this.notifyObservers("shipment", shipment);  // Notificar observadores
+        return shipment;
     }
 
 
