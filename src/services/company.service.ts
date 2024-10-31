@@ -1,36 +1,45 @@
-import { companyModel } from "../models/company.model.js"
-import { Company, objectVaried, passwordCompany, Shipment } from "../types/types.js"
-import { ModelShipments } from "../models/shipment.model.js"
+import { companyModel } from "../models/company.model.js";
+import { Company, objectVaried, passwordCompany, Shipment } from "../types/types.js";
+import { ModelShipments } from "../models/shipment.model.js";
 
-class companyService {
-    constructor() { }
+class CompanyService {
+    private static instance: CompanyService;
+
+    private constructor() { }
+
+    public static getInstance(): CompanyService {
+        if (!CompanyService.instance) {
+            CompanyService.instance = new CompanyService();
+        }
+        return CompanyService.instance;
+    }
 
     async findCompanys() {
-        return await companyModel.findAll()
+        return await companyModel.findAll();
     }
 
     async createCompany(company: objectVaried): Promise<passwordCompany | any> {
-        return await companyModel.create(company)
+        return await companyModel.create(company);
     }
 
     async findOneCompanyById(id: number): Promise<passwordCompany | any> {
-        return await companyModel.findByPk(id)
+        return await companyModel.findByPk(id);
     }
 
     async updateCompany(id: number, company: objectVaried) {
-        return await companyModel.update(company, { where: { id }})
+        return await companyModel.update(company, { where: { id } });
     }
 
     async deleteCompany(id: number) {
-        return await companyModel.destroy({ where: {id}})
+        return await companyModel.destroy({ where: { id } });
     }
 
-    async findEmail(email: string){
-        return await companyModel.findOne({where: { email }})
+    async findEmail(email: string) {
+        return await companyModel.findOne({ where: { email } });
     }
 
     async findCompany(company: string): Promise<Company | any> {
-        return await companyModel.findOne({where: { company }})
+        return await companyModel.findOne({ where: { company } });
     }
 
     async findShipmentsByCompany(company: string): Promise<Shipment | any> {
@@ -44,17 +53,8 @@ class companyService {
     }
 
     async markAsReceived(shipmentId: number): Promise<Shipment | any> {
-            return await ModelShipments.findByPk(shipmentId)
-            // if (!shipment) {
-            //     throw new Error("Envío no encontrado");
-            // }
-
-            // shipment.statusProduct = 'RECIBIDO';
-            // shipment.dateReceived = new Date(); 
-            // await shipment.save(); 
-
-            // return shipment; 
+        return await ModelShipments.findByPk(shipmentId);
     }
 }
 
-export default new companyService();
+export default CompanyService.getInstance();
